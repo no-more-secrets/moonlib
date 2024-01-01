@@ -1,4 +1,5 @@
 #!/usr/bin/env lua
+
 -----------------------------------------------------------------
 -- Imports.
 -----------------------------------------------------------------
@@ -30,12 +31,15 @@ local function test_command_pipe( prog, ... )
   local file = command_pipe( prog, ... )
   for line in file:lines() do print( 'stdout:', line ) end
   local success, termination, code = file:close()
-  print( format( 'system command result.\n' .. --
-                     '  success:     %s\n' .. --
-                     '  termination: %s\n' .. --
-                     '  code:        %d\n' .. --
-  '  command:     %s', --
-  success, termination, code, make_command_string( prog, ... ) ) )
+  -- LuaFormatter off
+  print( format( 'system command result.\n' ..
+                     '  success:     %s\n' ..
+                     '  termination: %s\n' ..
+                     '  code:        %d\n' ..
+                     '  command:     %s',
+                 success, termination, code,
+                 make_command_string( prog, ... ) ) )
+  -- LuaFormatter on
 end
 
 -----------------------------------------------------------------
