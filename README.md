@@ -1,6 +1,4 @@
-To use this library, append the following to the LUA_PATH variable:
-
-  $HOME/dev/moonlib/?.lua
+To use this library, append the following to the LUA_PATH variable: `$HOME/dev/moonlib/?.lua`
 
 e.g.:
 
