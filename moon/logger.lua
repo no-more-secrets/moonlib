@@ -64,11 +64,12 @@ end
 
 function M.not_implemented() assert( false, 'not implemented' ) end
 
-function M.bar()
+function M.bar( c )
+  c = c or '-'
   local columns = assert( getenv( 'COLUMNS' ),
                        'COLUMNS environment variable not set' )
   local cols = assert( tointeger( columns ) )
-  local dashes = string.rep( '-', cols )
+  local dashes = string.rep( c, cols )
   print( dashes )
 end
 
