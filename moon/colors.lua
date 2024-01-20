@@ -16,6 +16,7 @@ M.ANSI_GREEN = char( 27 ) .. '[32m'
 M.ANSI_RED = char( 27 ) .. '[31m'
 M.ANSI_YELLOW = char( 27 ) .. '[93m'
 M.ANSI_BLUE = char( 27 ) .. '[34m'
+M.ANSI_MAGENTA = char( 27 ) .. '[35m'
 M.ANSI_BOLD = char( 27 ) .. '[1m'
 
 -----------------------------------------------------------------
