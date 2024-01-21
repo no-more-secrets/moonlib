@@ -1,21 +1,24 @@
 -----------------------------------------------------------------
--- String methods.
+-- Assertions for unit tests.
 -----------------------------------------------------------------
 local M = {}
 
 -----------------------------------------------------------------
--- Implementation.
+-- Methods.
 -----------------------------------------------------------------
-function M.trim( str )
-  -- The '-' is like '*' except it matches the shortest sequence
-  -- instead of the longest sequence.
-  return str:match( '^%s*(.-)%s*$' )
+function M.ASSERT_EQ_APPROX( l, r )
+  if math.abs( l - r ) < .000001 then return end
+  error( tostring( l ) .. ' != ' .. tostring( r ), 2 )
 end
 
-function M.trim_right( str )
-  -- The '-' is like '*' except it matches the shortest sequence
-  -- instead of the longest sequence.
-  return str:match( '^(.-)%s*$' )
+function M.ASSERT_EQ( l, r )
+  if l == r then return end
+  error( tostring( l ) .. ' != ' .. tostring( r ), 2 )
+end
+
+function M.ASSERT_LE( l, r )
+  if l <= r then return end
+  error( tostring( l ) .. ' > ' .. tostring( r ), 2 )
 end
 
 -----------------------------------------------------------------

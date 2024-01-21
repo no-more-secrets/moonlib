@@ -13,8 +13,6 @@ local colors = require'moon.colors'
 -- Aliases.
 -----------------------------------------------------------------
 local format = string.format
-local getenv = os.getenv
-local tointeger = math.tointeger
 
 local printfln = printer.printfln
 
@@ -89,15 +87,6 @@ function M.check( condition, ... )
 end
 
 function M.not_implemented() assert( false, 'not implemented' ) end
-
-function M.bar( c )
-  c = c or '-'
-  local columns = assert( getenv( 'COLUMNS' ),
-                          'COLUMNS environment variable not set' )
-  local cols = assert( tointeger( columns ) )
-  local dashes = string.rep( c, cols )
-  print( dashes )
-end
 
 -----------------------------------------------------------------
 -- Finished.
