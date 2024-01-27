@@ -43,7 +43,8 @@ local function run_test_cases( module_name, pack )
   for _, name in ipairs( sorted_names ) do
     io.write( format( 'running test case %s%s%s.%s%s%s%s',
                       MAGENTA, module_name, NORMAL, BLUE, name,
-                      NORMAL, rep( '.', longest_length-#name+3 ) ) )
+                      NORMAL,
+                      rep( '.', longest_length - #name + 3 ) ) )
     io.flush()
     local ok, res = pcall( pack[name] )
     if ok then
@@ -61,7 +62,10 @@ end
 -- Main.
 -----------------------------------------------------------------
 local function main( files )
+  local first = true
   for _, file in ipairs( files ) do
+    if not first then print() end
+    first = false;
     local f = assert( loadfile( file ) )
     local test_pack = assert( setup.new_pack() )
     assert( type( test_pack ) == 'table' )

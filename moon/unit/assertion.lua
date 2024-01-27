@@ -21,6 +21,11 @@ function M.ASSERT_LE( l, r )
   error( tostring( l ) .. ' > ' .. tostring( r ), 2 )
 end
 
+function M.ASSERT_GE( l, r )
+  if l >= r then return end
+  error( tostring( l ) .. ' < ' .. tostring( r ), 2 )
+end
+
 -----------------------------------------------------------------
 -- Finished.
 -----------------------------------------------------------------
