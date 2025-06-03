@@ -26,14 +26,14 @@ local ASSERT_EQ = assertion.ASSERT_EQ
 -----------------------------------------------------------------
 -- Test cases.
 -----------------------------------------------------------------
-function Test.empty_table()
+function Test.format_data_table__empty_table()
   local input = { column_names={}, row_names={}, data={} }
   local expected = ''
   local tbl = printer.format_data_table( input )
   ASSERT_EQ( '\n' .. tbl, '\n' .. expected )
 end
 
-function Test.one_by_one()
+function Test.format_data_table__one_by_one()
   local input = {
     column_names={ 'col1' },
     row_names={ 'row1' },
@@ -46,7 +46,7 @@ row1    value]]
   ASSERT_EQ( '\n' .. tbl, '\n' .. expected )
 end
 
-function Test.four_by_three()
+function Test.format_data_table__four_by_three()
   local input = {
     column_names={ 'col1', 'col2', 'col3', 'col4' },
     row_names={ 'row1', 'row2', 'row3' },
@@ -65,7 +65,7 @@ row3      31    32       33    34]]
   ASSERT_EQ( '\n' .. tbl, '\n' .. expected )
 end
 
-function Test.one_by_three()
+function Test.format_data_table__one_by_three()
   local input = {
     column_names={ 'col1' },
     row_names={ 'row1', 'row2_long', 'row3' },
@@ -78,6 +78,18 @@ row2_long      21
 row3           31]]
   local tbl = printer.format_data_table( input )
   ASSERT_EQ( '\n' .. tbl, '\n' .. expected )
+end
+
+function Test.format_kv_table()
+  local input = { hello=1, world='foo' }
+  local expected = '[hello=1|world=foo]'
+  local res = printer.format_kv_table( input, {
+    start='[',
+    ending=']',
+    kv_sep='=',
+    pair_sep='|',
+  } )
+  ASSERT_EQ( res, expected )
 end
 
 -----------------------------------------------------------------

@@ -8,6 +8,7 @@ local M = {}
 -----------------------------------------------------------------
 local console = require'moon.console'
 local str = require'moon.str'
+local mtbl = require'moon.tbl'
 
 -----------------------------------------------------------------
 -- Aliases.
@@ -16,6 +17,7 @@ local concat = table.concat
 local format = string.format
 local insert = table.insert
 local max = math.max
+local on_ordered_kv = mtbl.on_ordered_kv
 
 local trim_right = str.trim_right
 local terminal_columns_safe = console.terminal_columns_safe
@@ -127,12 +129,51 @@ end
 
 -- Same as above but joins the result into a string.
 function M.format_data_table( desc )
-  return trim_right( concat( M.format_data_table_rows( desc ), '\n' ) )
+  return trim_right( concat( M.format_data_table_rows( desc ),
+                             '\n' ) )
 end
 
 -- Same as above but prints the result.
 function M.print_data_table( desc )
   print( M.format_data_table( desc ) )
+end
+
+-- Formats a table's key/value pairs into a single line. E.g.
+-- if we have this table:
+--
+--   local tbl = {
+--     hello=1,
+--     world='foo',
+--   }
+--
+-- and we call this:
+--
+--   format_kv_table( tbl, {
+--     start='[',
+--     ending=']',
+--     kv_sep='=',
+--     pair_sep='|',
+--   } )
+--
+-- we will obtain the following string:
+--
+--   [hello=1|world=foo]
+--
+-- NOTE: the keys are sorted in alphabetical order.
+--
+function M.format_kv_table( tbl, args )
+  local start = args.start or ''
+  local ending = args.ending or ''
+  local kv_sep = args.kv_sep or '='
+  local pair_sep = args.pair_sep or ','
+  pair_sep = ''
+  local line = ''
+  on_ordered_kv( tbl, function( k, v )
+    line = format( '%s%s%s%s%s', line, pair_sep, k, kv_sep,
+                   tostring( v ) )
+    pair_sep = args.pair_sep or ','
+  end )
+  return format( '%s%s%s', start, line, ending )
 end
 
 -----------------------------------------------------------------
