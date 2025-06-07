@@ -41,6 +41,31 @@ function M.deep_copy( thing )
   return res
 end
 
+local function tables_equal_impl( l, r )
+  for k, v in pairs( l ) do
+    local equal
+    if type( v ) == 'table' and type( r[k] ) == 'table' then
+      local ok, kk, l_v, r_v = M.tables_equal( r[k], v )
+      if not ok then return ok, kk, l_v, r_v end
+      equal = true
+    else
+      equal = (r[k] == v)
+    end
+    if not equal then return false, k, v, r[k] end
+  end
+  return true
+end
+
+-- Recursively compare tables.
+function M.tables_equal( l, r )
+  local ok, k, l_v, r_v
+  ok, k, l_v, r_v = tables_equal_impl( l, r )
+  if not ok then return ok, k, l_v, r_v end
+  ok, k, l_v, r_v = tables_equal_impl( r, l )
+  if not ok then return ok, k, l_v, r_v end
+  return true
+end
+
 -----------------------------------------------------------------
 -- Finished.
 -----------------------------------------------------------------

@@ -20,11 +20,9 @@ end
 
 -- The lines do NOT contain newlines at the end.
 function M.read_file_lines( name )
-  -- TODO: use <close> here.
-  local f = assert( io.open( name, 'r' ) )
+  local f<close> = assert( io.open( name, 'r' ) )
   local res = {}
   for line in f:lines() do insert( res, line ) end
-  f:close()
   return res
 end
 

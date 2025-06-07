@@ -23,6 +23,8 @@ local _ENV = nil
 -----------------------------------------------------------------
 local ASSERT_EQ = assertion.ASSERT_EQ
 
+local to_json_oneline = printer.to_json_oneline
+
 -----------------------------------------------------------------
 -- Test cases.
 -----------------------------------------------------------------
@@ -90,6 +92,52 @@ function Test.format_kv_table()
     pair_sep='|',
   } )
   ASSERT_EQ( res, expected )
+end
+
+function Test.to_json_oneline()
+  local tbl, expected
+
+  local function f() return to_json_oneline( tbl ) end
+
+  tbl = nil
+  expected = 'null'
+  ASSERT_EQ( f(), expected )
+
+  tbl = {}
+  expected = '{}'
+  ASSERT_EQ( f(), expected )
+
+  tbl = 5
+  expected = '5'
+  ASSERT_EQ( f(), expected )
+
+  tbl = 5.6
+  expected = '5.6'
+  ASSERT_EQ( f(), expected )
+
+  tbl = 'hello'
+  expected = '"hello"'
+  ASSERT_EQ( f(), expected )
+
+  tbl = { 'hello', 'world' }
+  expected = '["hello","world"]'
+  ASSERT_EQ( f(), expected )
+
+  tbl = { hello='world', aaa='bbb' }
+  expected = '{"aaa":"bbb","hello":"world"}'
+  ASSERT_EQ( f(), expected )
+
+  tbl = {
+    hello='world',
+    nested={
+      'elem1', 5, 7, { ccc='ddd', ddd={ hhh={ 'a', 3, 2 } } },
+      'nine',
+    },
+    aaa='bbb',
+  }
+  expected =
+      '{"aaa":"bbb","hello":"world","nested":["elem1",5,7,{"ccc":"ddd","ddd":{"hhh":["a",3,2]}},"nine"]}'
+  ASSERT_EQ( f(), expected )
 end
 
 -----------------------------------------------------------------
