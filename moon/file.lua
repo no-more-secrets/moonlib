@@ -7,6 +7,7 @@ local M = {}
 -- Aliases.
 -----------------------------------------------------------------
 local insert = table.insert
+local format = string.format
 
 -----------------------------------------------------------------
 -- Implementation.
@@ -22,9 +23,7 @@ function M.read_file_lines( name )
   -- TODO: use <close> here.
   local f = assert( io.open( name, 'r' ) )
   local res = {}
-  for line in f:lines() do
-    insert( res, line )
-  end
+  for line in f:lines() do insert( res, line ) end
   f:close()
   return res
 end
@@ -34,6 +33,19 @@ function M.append_string_to_file( filename, what )
   local f = assert( io.open( filename, 'a+' ) )
   f:write( what )
   f:close()
+end
+
+function M.copy_file( src, dst, options )
+  options = options or {}
+  options.force = options.force or false
+  if not options.force and M.exists( dst ) then
+    error( format( 'cannot overwrite file %s', dst ) )
+  end
+  do
+    local infile<close> = assert( io.open( src, 'rb' ) )
+    local outfile<close> = assert( io.open( dst, 'wb' ) )
+    outfile:write( infile:read( '*a' ) )
+  end
 end
 
 -----------------------------------------------------------------
