@@ -23,6 +23,13 @@ function M.on_ordered_kv( tbl, op )
   end
 end
 
+function M.count_keys( tbl )
+  assert( type( tbl ) == 'table' )
+  local total = 0
+  for _, _ in pairs( tbl ) do total = total + 1 end
+  return total
+end
+
 -- Actually supports any type; if it is not a table it will just
 -- get returned since only tables are mutable.
 function M.deep_copy( thing )
