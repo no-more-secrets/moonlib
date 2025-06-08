@@ -8,6 +8,7 @@ local colors = require'moon.colors'
 local err = require'moon.err'
 local printer = require'moon.printer'
 local setup = require'moon.unit.setup'
+local console = require'moon.console'
 
 -----------------------------------------------------------------
 -- Aliases.
@@ -18,6 +19,9 @@ local sort = table.sort
 local insert = table.insert
 local pcall = err.pcall_traceback
 local printfln = printer.printfln
+local terminal_width_safe = console.terminal_columns_safe
+local min = math.min
+local max = math.max
 
 -----------------------------------------------------------------
 -- Constants.
@@ -28,6 +32,8 @@ local NORMAL = colors.ANSI_NORMAL
 local RED = colors.ANSI_RED
 local YELLOW = colors.ANSI_YELLOW
 local MAGENTA = colors.ANSI_MAGENTA
+
+local MAX_WIDTH = 100
 
 -----------------------------------------------------------------
 -- Methods.
@@ -40,17 +46,22 @@ local function run_test_cases( module_name, pack )
     insert( sorted_names, name )
   end
   sort( sorted_names )
+  local w = min( MAX_WIDTH, terminal_width_safe() )
+  local PREFIX = 'test case: '
   for _, name in ipairs( sorted_names ) do
-    io.write( format( 'running test case %s%s%s.%s%s%s%s',
-                      MAGENTA, module_name, NORMAL, BLUE, name,
-                      NORMAL,
-                      rep( '.', longest_length - #name + 3 ) ) )
+    local text_no_colors = format( '%s%s.%s', PREFIX,
+                                   module_name, name )
+    local num_dots = w - #text_no_colors - #' passed' -- or failed
+    num_dots = max( num_dots, 3 )
+    io.write( format( '%s%s%s%s.%s%s%s%s', PREFIX, MAGENTA,
+                      module_name, NORMAL, BLUE, name, NORMAL,
+                      rep( '.', num_dots ) ) )
     io.flush()
     local ok, res = pcall( pack[name] )
     if ok then
-      io.write( GREEN .. ' passed' .. NORMAL .. '.\n' )
+      printfln( '%s passed%s', GREEN, NORMAL )
     else
-      io.write( RED .. ' failed' .. NORMAL .. '.\n' )
+      printfln( '%s failed%s', RED, NORMAL )
       printfln( '%s%s%s', YELLOW, res, NORMAL )
       return false
     end
@@ -62,10 +73,7 @@ end
 -- Main.
 -----------------------------------------------------------------
 local function main( files )
-  local first = true
   for _, file in ipairs( files ) do
-    if not first then print() end
-    first = false;
     local f = assert( loadfile( file ) )
     local test_pack = assert( setup.new_pack() )
     assert( type( test_pack ) == 'table' )
