@@ -34,6 +34,11 @@ function M.terminal_columns_safe()
   return val
 end
 
+function M.is_wide_terminal()
+  local cols = M.terminal_columns_safe()
+  return cols > 250
+end
+
 -----------------------------------------------------------------
 -- Finished.
 -----------------------------------------------------------------
