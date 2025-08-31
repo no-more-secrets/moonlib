@@ -9,10 +9,12 @@ local err = require'moon.err'
 local printer = require'moon.printer'
 local setup = require'moon.unit.setup'
 local console = require'moon.console'
+local tbl = require'moon.tbl'
 
 -----------------------------------------------------------------
 -- Aliases.
 -----------------------------------------------------------------
+local count_keys = tbl.count_keys
 local format = string.format
 local rep = string.rep
 local sort = table.sort
@@ -77,7 +79,9 @@ local function main( files )
     local f = assert( loadfile( file ) )
     local test_pack = assert( setup.new_pack() )
     assert( type( test_pack ) == 'table' )
-    assert( f( test_pack ) )
+    f( test_pack )
+    -- Ensure that there is at least one test case.
+    assert( count_keys( test_pack ) > 0 )
     local module_name = assert( file:match( '(.*)%.lua' ) )
     local ok = run_test_cases( module_name, test_pack )
     if not ok then break end

@@ -63,8 +63,3 @@ function Test.copy_file()
   ASSERT( exists( input ) )
   ASSERT( exists( output ) )
 end
-
------------------------------------------------------------------
--- Finished.
------------------------------------------------------------------
-return Test

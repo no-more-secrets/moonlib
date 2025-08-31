@@ -139,8 +139,3 @@ function Test.to_json_oneline()
       '{"aaa":"bbb","hello":"world","nested":["elem1",5,7,{"ccc":"ddd","ddd":{"hhh":["a",3,2]}},"nine"]}'
   ASSERT_EQ( f(), expected )
 end
-
------------------------------------------------------------------
--- Finished.
------------------------------------------------------------------
-return Test

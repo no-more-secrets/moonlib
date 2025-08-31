@@ -52,8 +52,3 @@ function Test.set_and_size()
   ASSERT_TABLE_EQ( set( input ), expected )
   ASSERT_EQ( set_size( set( input ) ), 2 )
 end
-
------------------------------------------------------------------
--- Finished.
------------------------------------------------------------------
-return Test
