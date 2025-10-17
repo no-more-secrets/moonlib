@@ -4,10 +4,18 @@
 local M = {}
 
 -----------------------------------------------------------------
+-- Imports.
+-----------------------------------------------------------------
+local cmd = require'moon.cmd'
+local str = require'moon.str'
+
+-----------------------------------------------------------------
 -- Aliases.
 -----------------------------------------------------------------
 local insert = table.insert
 local format = string.format
+local command = cmd.command
+local trim = str.trim
 
 -----------------------------------------------------------------
 -- Implementation.
@@ -45,6 +53,8 @@ function M.copy_file( src, dst, options )
     outfile:write( infile:read( '*a' ) )
   end
 end
+
+function M.realpath( p ) return trim( command( 'realpath', p ) ) end
 
 -----------------------------------------------------------------
 -- Finished.
