@@ -18,9 +18,7 @@ local format = string.format
 -----------------------------------------------------------------
 local function make_command_string( prog, ... )
   assert( prog )
-  local c = format( '"%s"', prog )
-  assert( not prog:match( ' ' ),
-          'program name should not have spaces in it.' )
+  local c = prog
   for _, arg in ipairs( table.pack( ... ) ) do
     arg = arg:gsub( '"', [[\"]] )
     -- LuaFormatter off
