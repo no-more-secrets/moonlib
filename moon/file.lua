@@ -8,6 +8,8 @@ local M = {}
 -----------------------------------------------------------------
 local cmd = require'moon.cmd'
 local str = require'moon.str'
+local posix = require'posix'
+local stat = require'posix.sys.stat'
 
 -----------------------------------------------------------------
 -- Aliases.
@@ -24,6 +26,12 @@ function M.exists( name )
   -- TODO: use <close> here.
   local f = io.open( name, 'r' )
   return f ~= nil and f:close()
+end
+
+function M.is_symlink( path )
+  local s = posix.lstat( path )
+  if not s then return false end
+  return stat.S_ISLNK( s.st_mode ) ~= 0
 end
 
 -- The lines do NOT contain newlines at the end.

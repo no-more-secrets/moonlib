@@ -46,6 +46,7 @@ function M.info( fmt, ... )
   assert( fmt )
   local msg = format( fmt, ... )
   printfln( '%sinfo%s %s', ANSI_GREEN, ANSI_NORMAL, msg )
+  io.flush()
 end
 
 function M.dbg( fmt, ... )
@@ -53,6 +54,7 @@ function M.dbg( fmt, ... )
   assert( fmt )
   local msg = format( fmt, ... )
   printfln( '%sdebug%s %s', ANSI_BLUE, ANSI_NORMAL, msg )
+  io.flush()
 end
 
 function M.trace( fmt, ... )
@@ -60,6 +62,7 @@ function M.trace( fmt, ... )
   assert( fmt )
   local msg = format( fmt, ... )
   printfln( '%strace%s %s', ANSI_MAGENTA, ANSI_NORMAL, msg )
+  io.flush()
 end
 
 function M.warn( fmt, ... )
@@ -67,6 +70,7 @@ function M.warn( fmt, ... )
   assert( fmt )
   local msg = format( fmt, ... )
   printfln( '%swarning%s %s', ANSI_YELLOW, ANSI_NORMAL, msg )
+  io.flush()
 end
 
 function M.err( fmt, ... )
@@ -75,6 +79,7 @@ function M.err( fmt, ... )
   local msg = format( fmt, ... )
   printfln( '%s%serror%s %s', ANSI_RED, ANSI_BOLD, ANSI_NORMAL,
             msg )
+  io.flush()
 end
 
 function M.fatal( fmt, ... )
