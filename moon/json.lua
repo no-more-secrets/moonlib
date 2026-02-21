@@ -27,6 +27,57 @@ M.JNULL = {}
 -----------------------------------------------------------------
 -- Implementation.
 -----------------------------------------------------------------
+local function list_mt()
+  local storage = { [0]=0 }
+  return {
+    __index=function( _, i )
+      local length = assert( storage[0] )
+      assert( type( length ) == 'number' )
+      assert( math.type( length ) == 'integer' )
+      assert( type( i ) == 'number' )
+      assert( math.type( i ) == 'integer' )
+      if i == 0 then return storage[0] end
+      if i > length then return nil end
+      local val = storage[i]
+      if val == nil then return M.JNULL end
+      return val
+    end,
+    __newindex=function( _, i, val )
+      local length = assert( storage[0] )
+      assert( type( length ) == 'number' )
+      assert( math.type( length ) == 'integer' )
+      assert( type( i ) == 'number' )
+      assert( math.type( i ) == 'integer' )
+      assert( i >= 1, 'indices start with 1' )
+      storage[i] = val
+      if val == nil then
+        storage[0] = math.min( i - 1, length )
+      else
+        if i > 1 and storage[i - 1] == nil then
+          -- Can insert at the ned, but not beyond the end.
+          error( 'index out of bounds', 2 )
+        end
+        -- Set new length.
+        if i > length then storage[0] = i end
+      end
+    end,
+    __len=function( _ )
+      local length = assert( storage[0] )
+      return length
+    end,
+    __metatable=false,
+  }
+end
+
+-- Creates a new list. A list object is a lua list that tracks
+-- the length of the list in the [0] item so that we can 1) dis-
+-- tinguish empty lists from empty tables, and 2) so that we can
+-- have nil values, which will be exposed as JNULL. That said, if
+-- you want to store a nil value in the list you need to use
+-- JNULL, otherwise the act of storing nil will truncate the
+-- list.
+function M.list() return setmetatable( {}, list_mt() ) end
+
 -- Decode a string of json.
 function M.decode( json_string )
   -- Start decoding from the start of the string.

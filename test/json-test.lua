@@ -16,6 +16,7 @@ local json = require'moon.json'
 local assert = assert
 local type = type
 local next = next
+local table = table
 
 -- No reading or writing of globals from here on.
 local _ENV = nil
@@ -24,12 +25,127 @@ local _ENV = nil
 -- Aliases.
 -----------------------------------------------------------------
 local ASSERT_EQ = assertion.ASSERT_EQ
+local ASSERT_THROWS = assertion.ASSERT_THROWS
+
+local insert = table.insert
 
 local JNULL = assert( json.JNULL )
 
 -----------------------------------------------------------------
 -- Test cases.
 -----------------------------------------------------------------
+function Test.list_constructor()
+  local l = json.list()
+  ASSERT_EQ( #l, 0 )
+  ASSERT_EQ( l[0], 0 )
+  ASSERT_EQ( l[1], nil )
+  ASSERT_EQ( json.tostring( l ), '[]' )
+
+  ASSERT_THROWS( function() l[3] = 5 end )
+  l[1] = JNULL
+  l[2] = JNULL
+
+  l[3] = 5
+  ASSERT_EQ( #l, 3 )
+  ASSERT_EQ( l[0], 3 )
+  ASSERT_EQ( l[1], JNULL )
+  ASSERT_EQ( l[2], JNULL )
+  ASSERT_EQ( l[3], 5 )
+  ASSERT_EQ( l[4], nil )
+  ASSERT_EQ( json.tostring( l ), '[null,null,5]' )
+
+  ASSERT_THROWS( function() l[5] = 'hello' end )
+  l[4] = JNULL
+
+  l[5] = 'hello'
+  ASSERT_EQ( #l, 5 )
+  ASSERT_EQ( l[0], 5 )
+  ASSERT_EQ( l[1], JNULL )
+  ASSERT_EQ( l[2], JNULL )
+  ASSERT_EQ( l[3], 5 )
+  ASSERT_EQ( l[4], JNULL )
+  ASSERT_EQ( l[5], 'hello' )
+  ASSERT_EQ( l[6], nil )
+  ASSERT_EQ( json.tostring( l ), '[null,null,5,null,"hello"]' )
+
+  l[4] = nil
+  ASSERT_EQ( #l, 3 )
+  ASSERT_EQ( l[0], 3 )
+  ASSERT_EQ( l[1], JNULL )
+  ASSERT_EQ( l[2], JNULL )
+  ASSERT_EQ( l[3], 5 )
+  ASSERT_EQ( l[4], nil )
+  ASSERT_EQ( l[5], nil )
+  ASSERT_EQ( l[6], nil )
+  ASSERT_EQ( json.tostring( l ), '[null,null,5]' )
+
+  insert( l, 'zzz' )
+  ASSERT_EQ( #l, 4 )
+  ASSERT_EQ( l[0], 4 )
+  ASSERT_EQ( l[1], JNULL )
+  ASSERT_EQ( l[2], JNULL )
+  ASSERT_EQ( l[3], 5 )
+  ASSERT_EQ( l[4], 'zzz' )
+  ASSERT_EQ( l[5], nil )
+  ASSERT_EQ( l[6], nil )
+  ASSERT_EQ( json.tostring( l ), '[null,null,5,"zzz"]' )
+
+  insert( l, 'abc' )
+  ASSERT_EQ( #l, 5 )
+  ASSERT_EQ( l[0], 5 )
+  ASSERT_EQ( l[1], JNULL )
+  ASSERT_EQ( l[2], JNULL )
+  ASSERT_EQ( l[3], 5 )
+  ASSERT_EQ( l[4], 'zzz' )
+  ASSERT_EQ( l[5], 'abc' )
+  ASSERT_EQ( l[6], nil )
+  ASSERT_EQ( json.tostring( l ), '[null,null,5,"zzz","abc"]' )
+
+  l[2] = nil
+  ASSERT_EQ( #l, 1 )
+  ASSERT_EQ( l[0], 1 )
+  ASSERT_EQ( l[1], JNULL )
+  ASSERT_EQ( l[2], nil )
+  ASSERT_EQ( l[3], nil )
+  ASSERT_EQ( l[4], nil )
+  ASSERT_EQ( l[5], nil )
+  ASSERT_EQ( l[6], nil )
+  ASSERT_EQ( json.tostring( l ), '[null]' )
+
+  l[1] = 5
+  ASSERT_EQ( #l, 1 )
+  ASSERT_EQ( l[0], 1 )
+  ASSERT_EQ( l[1], 5 )
+  ASSERT_EQ( l[2], nil )
+  ASSERT_EQ( l[3], nil )
+  ASSERT_EQ( l[4], nil )
+  ASSERT_EQ( l[5], nil )
+  ASSERT_EQ( l[6], nil )
+  ASSERT_EQ( json.tostring( l ), '[5]' )
+
+  l[1] = JNULL
+  ASSERT_EQ( #l, 1 )
+  ASSERT_EQ( l[0], 1 )
+  ASSERT_EQ( l[1], JNULL )
+  ASSERT_EQ( l[2], nil )
+  ASSERT_EQ( l[3], nil )
+  ASSERT_EQ( l[4], nil )
+  ASSERT_EQ( l[5], nil )
+  ASSERT_EQ( l[6], nil )
+  ASSERT_EQ( json.tostring( l ), '[null]' )
+
+  l[1] = nil
+  ASSERT_EQ( #l, 0 )
+  ASSERT_EQ( l[0], 0 )
+  ASSERT_EQ( l[1], nil )
+  ASSERT_EQ( l[2], nil )
+  ASSERT_EQ( l[3], nil )
+  ASSERT_EQ( l[4], nil )
+  ASSERT_EQ( l[5], nil )
+  ASSERT_EQ( l[6], nil )
+  ASSERT_EQ( json.tostring( l ), '[]' )
+end
+
 function Test.decode()
   local json_str
   local o

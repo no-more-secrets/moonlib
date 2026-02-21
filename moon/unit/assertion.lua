@@ -49,6 +49,12 @@ function M.ASSERT_TABLE_EQ( l, r )
   error( format( 'mismatch on key %s: %s != %s', k, l_v, l_r ), 2 )
 end
 
+function M.ASSERT_THROWS( fn, ... )
+  local ok = pcall( fn, ... )
+  if not ok then return end
+  error( 'expected error but non was thrown' )
+end
+
 -----------------------------------------------------------------
 -- Finished.
 -----------------------------------------------------------------
