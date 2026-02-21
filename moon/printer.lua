@@ -26,7 +26,7 @@ local terminal_columns_safe = console.terminal_columns_safe
 -- Implementation.
 -----------------------------------------------------------------
 function M.printf( fmt, ... )
-  assert( fmt )
+  fmt = fmt or ''
   io.write( format( fmt, ... ) )
 end
 
@@ -175,46 +175,6 @@ function M.format_kv_table( tbl, args )
     pair_sep = args.pair_sep or ','
   end )
   return format( '%s%s%s', start, line, ending )
-end
-
--- Prints on one line.
-local function to_json_oneline_impl( out, value )
-  assert( out )
-  local function append( what ) insert( out, what ) end
-  if type( value ) == 'table' then
-    if not value[1] then
-      -- key/value table.
-      append( '{' )
-      on_ordered_kv( value, function( k, v )
-        append( format( '"%s":', k ) )
-        to_json_oneline_impl( out, v )
-        append( ',' )
-      end )
-      if out[#out] == ',' then out[#out] = nil end
-      append( '}' )
-    else
-      -- list.
-      append( '[' )
-      on_ordered_kv( value, function( _, v )
-        to_json_oneline_impl( out, v )
-        append( ',' )
-      end )
-      if out[#out] == ',' then out[#out] = nil end
-      append( ']' )
-    end
-  elseif type( value ) == 'nil' then
-    append( 'null' )
-  elseif type( value ) == 'string' then
-    append( format( '"%s"', value ) )
-  else
-    append( tostring( value ) )
-  end
-end
-
-function M.to_json_oneline( value )
-  local res = {}
-  to_json_oneline_impl( res, value )
-  return concat( res, '' )
 end
 
 -----------------------------------------------------------------
