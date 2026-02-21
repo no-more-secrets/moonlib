@@ -360,4 +360,73 @@ function Test.tostring_pretty()
   ]
 }]=]
   ASSERT_EQ( f(), expected )
+
+  tbl = {
+    __key_order={ 'hello', 'nested', 'aaa' },
+    hello='world',
+    nested={
+      'elem1', 5, 7,
+      { ccc='ddd', ddd={ hhh={ 'a', 3, JNULL, 2 } } }, 'nine',
+    },
+    aaa='bbb',
+  }
+  expected = [=[
+{
+  "hello": "world",
+  "nested": [
+    "elem1",
+    5,
+    7,
+    {
+      "ccc": "ddd",
+      "ddd": {
+        "hhh": [
+          "a",
+          3,
+          null,
+          2
+        ]
+      }
+    },
+    "nine"
+  ],
+  "aaa": "bbb"
+}]=]
+  ASSERT_EQ( f(), expected )
+
+  tbl = {
+    __key_order={ 'hello', 'nested', 'aaa' },
+    hello='world',
+    nested={
+      'elem1', 5, 7, {
+        __key_order={ 'ddd', 'ccc' },
+        ccc='ddd',
+        ddd={ hhh={ 'a', 3, JNULL, 2 } },
+      }, 'nine',
+    },
+    aaa='bbb',
+  }
+  expected = [=[
+{
+  "hello": "world",
+  "nested": [
+    "elem1",
+    5,
+    7,
+    {
+      "ddd": {
+        "hhh": [
+          "a",
+          3,
+          null,
+          2
+        ]
+      },
+      "ccc": "ddd"
+    },
+    "nine"
+  ],
+  "aaa": "bbb"
+}]=]
+  ASSERT_EQ( f(), expected )
 end
