@@ -134,7 +134,7 @@ local function pprint_ordered_impl( append, o, indent, spaces )
     end
     append()
     for i, k in ipairs( keys ) do
-      assert( o[k] ~= nil )
+      assert( o[k] ~= nil, 'key not found: ' .. tostring( k ) )
       local v = o[k]
       k = '"' .. k .. '"'
       local colon = (indent > 0) and ': ' or ':'
