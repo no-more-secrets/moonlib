@@ -16,6 +16,7 @@ local logger = require( 'moon.logger' )
 local yield = coroutine.yield
 local timeit_micros = time.timeit_micros
 local dbg = logger.dbg
+local format = string.format
 
 -----------------------------------------------------------------
 -- Constants.
@@ -103,7 +104,10 @@ M.read = assert( M.decode )
 local function pprint_ordered_impl( append, o, indent, spaces )
   indent = indent or DEFAULT_INDENT
   spaces = spaces or ''
-  assert( type( indent ) == 'number' )
+  assert( type( indent ) == 'number',
+          format(
+              'indent must be a number but instead is of type "%s"',
+              type( indent ) ) )
   assert( type( spaces ) == 'string' )
   if o == M.JNULL or o == nil then
     append( 'null' )
@@ -239,6 +243,14 @@ function M.tostring_pretty( o, indent )
   local sep = '\n'
   write_with_sep( emit, o, sep, indent )
   return table.concat( lines )
+end
+
+function M.write_file( filename, o, indent )
+  assert( type( filename ) == 'string',
+          'file name expected in first argument' )
+  local out<close> = assert( io.open( filename, 'w' ) )
+  local function emit( line ) out:write( line ) end
+  return M.write_pretty( o, indent, emit )
 end
 
 -----------------------------------------------------------------
