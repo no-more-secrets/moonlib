@@ -21,7 +21,6 @@ local _ENV = nil
 -----------------------------------------------------------------
 -- Aliases.
 -----------------------------------------------------------------
-local ASSERT_GE = assertion.ASSERT_GE
 local ASSERT_EQ = assertion.ASSERT_EQ
 
 local clamp = mmath.clamp

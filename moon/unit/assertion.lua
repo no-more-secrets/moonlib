@@ -55,6 +55,15 @@ function M.ASSERT_THROWS( fn, ... )
   error( 'expected error but non was thrown' )
 end
 
+function M.ASSERT_THROWS_SUBSTR( substr, fn, ... )
+  local ok, msg = pcall( fn, ... )
+  if ok then error( 'expected error but non was thrown' ) end
+  assert( tostring( msg ):find( substr, 1, true ),
+          format(
+              'error thrown without substring "%s"; msg="%s"',
+              substr, tostring( msg ) ) )
+end
+
 -----------------------------------------------------------------
 -- Finished.
 -----------------------------------------------------------------
