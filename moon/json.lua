@@ -98,6 +98,11 @@ end
 
 M.read = assert( M.decode )
 
+function M.read_file( path )
+  local f<close> = assert( io.open( path, 'r' ) )
+  return assert( M.read( f:read( '*all' ) ) )
+end
+
 -- Coroutine generator function that pretty-prints a layout in
 -- conforming JSON while preserving key ordering. Each time a
 -- line is produced it will yield it.
