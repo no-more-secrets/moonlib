@@ -14,9 +14,17 @@ local function clamp( n, low, high )
   return min( max( n, low ), high )
 end
 
+local function shuffle( lst )
+  for i = 1, #lst do
+    local j = math.random( i, #lst )
+    lst[i], lst[j] = lst[j], lst[i]
+  end
+end
+
 -----------------------------------------------------------------
 -- Finished.
 -----------------------------------------------------------------
 return {
   clamp=clamp, --
+  shuffle=shuffle, --
 }
