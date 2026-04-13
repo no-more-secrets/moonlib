@@ -6,12 +6,14 @@
 -- Imports.
 -----------------------------------------------------------------
 local logger = require( 'moon.logger' )
+local file = require( 'moon.file' )
 
 -----------------------------------------------------------------
 -- Aliases.
 -----------------------------------------------------------------
 local format = string.format
 local info = logger.info
+local chmod = assert( file.chmod )
 
 -----------------------------------------------------------------
 -- Implementation.
@@ -77,10 +79,13 @@ local function line_graph_to_file( path, csv_data, opts )
   assert( path )
   info( 'writing gnuplot file %s...', path )
   local body = line_graph( csv_data, opts )
-  local f<close> = assert( io.open( path, 'w' ), format(
-                               'failed to open file %s',
-                               tostring( path ) ) )
-  f:write( body )
+  do
+    local f<close> = assert( io.open( path, 'w' ), format(
+                                 'failed to open file %s',
+                                 tostring( path ) ) )
+    f:write( body )
+  end
+  chmod( path, 'u+x' )
 end
 
 -----------------------------------------------------------------

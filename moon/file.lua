@@ -64,6 +64,14 @@ end
 
 function M.realpath( p ) return trim( command( 'realpath', p ) ) end
 
+function M.chmod( file, symbolic )
+  assert( file )
+  assert( symbolic )
+  -- chmod returns the error message as second parameter, so
+  -- will get reported by the assert if it fires.
+  assert( posix.chmod( file, symbolic ) )
+end
+
 -----------------------------------------------------------------
 -- Finished.
 -----------------------------------------------------------------
