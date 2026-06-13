@@ -63,6 +63,11 @@ $CSVData << EOF
 "100","5.0","3.3333333333333"
 EOF
 
+outfile = system( "mktemp /tmp/gnuplot-XXXXXX.png" )
+
+set term png size 1920,1200 font "Fira Sans,14"
+set output outfile
+
 set title "Some Title"
 set key outside right
 set grid
@@ -71,7 +76,10 @@ set ylabel "Some Y Label"
 set key autotitle columnhead
 set xrange [0:100]
 set yrange [0:6]
-plot for [col=2:*] $CSVData using 1:col with lines lw 2
+plot for [col=2:*] $CSVData using 1:col with lines lw 3
+
+set output
+system sprintf( "eog --fullscreen '%s' >/dev/null 2>&1 &", outfile )
 ]]
 
   ASSERT_EQ( body, expected_body )

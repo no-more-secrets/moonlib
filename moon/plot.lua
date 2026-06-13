@@ -58,6 +58,13 @@ local function line_graph( csv_data, opts )
   emit_line( 'EOF' )
   emit_line()
 
+  emit_line(
+      'outfile = system( "mktemp /tmp/gnuplot-XXXXXX.png" )' )
+  emit_line()
+  emit_line( 'set term png size 1920,1200 font "Fira Sans,14"' )
+  emit_line( 'set output outfile' )
+  emit_line()
+
   emit_line( format( 'set title "%s"', opts.title ) )
   emit_line( 'set key outside right' )
   emit_line( 'set grid' )
@@ -71,7 +78,11 @@ local function line_graph( csv_data, opts )
     emit_line( format( 'set yrange [%s]', opts.y_range ) )
   end
   emit_line(
-      'plot for [col=2:*] $CSVData using 1:col with lines lw 2' )
+      'plot for [col=2:*] $CSVData using 1:col with lines lw 3' )
+  emit_line()
+  emit_line( 'set output' )
+  emit_line(
+      [[system sprintf( "eog --fullscreen '%s' >/dev/null 2>&1 &", outfile )]] )
   return table.concat( out )
 end
 
