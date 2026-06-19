@@ -15,6 +15,7 @@ local modf = math.modf
 local floor = math.floor
 local pack = table.pack
 local unpack = table.unpack
+local format = string.format
 
 local CLOCK_REALTIME = posix_time.CLOCK_REALTIME
 
@@ -48,6 +49,18 @@ local function timeit_micros( func )
   return end_ - start, unpack( res )
 end
 
+local function timeit( name, fn )
+  local function default_fn( delta_us )
+    print( format( 'time[%s]: %dus', name, delta_us ) )
+  end
+  fn = fn or default_fn
+  local mt = {
+    now=now_micros(),
+    __close=function( self ) fn( now_micros() - self.now ) end,
+  }
+  return setmetatable( { now=now_micros() }, mt )
+end
+
 -----------------------------------------------------------------
 -- Finished.
 -----------------------------------------------------------------
@@ -55,4 +68,5 @@ return {
   sleep=sleep,
   now_micros=now_micros,
   timeit_micros=timeit_micros,
+  timeit=timeit,
 }

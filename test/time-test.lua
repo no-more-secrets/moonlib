@@ -23,10 +23,12 @@ local _ENV = nil
 -----------------------------------------------------------------
 local ASSERT_GE = assertion.ASSERT_GE
 local ASSERT_EQ = assertion.ASSERT_EQ
+local ASSERT = assertion.ASSERT
 
 local now_micros = time.now_micros
 local sleep = time.sleep
 local timeit_micros = time.timeit_micros
+local timeit = time.timeit
 
 -----------------------------------------------------------------
 -- Test cases.
@@ -46,4 +48,12 @@ function Test.timeit_micros()
   ASSERT_EQ( x, 3 )
   ASSERT_EQ( y, 2 )
   ASSERT_EQ( z, 1 )
+end
+
+function Test.timeit()
+  local function handler( delta ) ASSERT( delta >= 10 ) end
+  do
+    local _<close> = timeit( 'hello', handler )
+    sleep( .00001 ) -- 10us
+  end
 end
